@@ -6,103 +6,114 @@ def ListaEnteros(inicio, tamanio):
     for i in range(inicio, inicio + tamanio):
         lista.append(i)
     return lista
-
 def DividirDosNumeros(dividendo, divisor):
-    parte_entera = None
-    resto = None
+    if divisor == 0:
+        raise ValueError("El divisor no puede ser cero.")
+    
+    parte_entera = dividendo // divisor
+    resto = dividendo % divisor
+    
     return parte_entera, resto
 
-def NumeroCapicua(numero):
-    def invert(n):
-        numero = 0
-        while n != 0:
-            numero = 10 * numero + n % 10
-            n //= 10
-        return numero
 
-    num_inv = invert(numero)
-    if type(numero) == int:
-        if numero == num_inv:
-            return  True
-        else:
-            return False
+def NumeroCapicua(numero):
+    def invertir(n):
+        numero_invertido = 0
+        while n != 0:
+            numero_invertido = 10 * numero_invertido + n % 10
+            n //= 10
+        return numero_invertido
+    
+    numero_invertido = invertir(numero)
+    
+    # Verificar si el número original es igual a su inverso
+    if numero == numero_invertido:
+        return True
     else:
-            return None
+        return False
+
+
 
 def Factorial(numero):
-    fact = 1
-    if type (numero)==int and numero > 0:
-        for i in range(1,numero+1):
-            fact*=i 
-        return fact
+    if isinstance(numero, int) and numero >= 0:
+        if numero == 0:
+            return 1  # Caso especial: factorial de 0 es 1
+        else:
+            factorial = 1
+            for i in range(1, numero + 1):
+                factorial *= i
+            return factorial
     else:
         return None
 
     
-def ProximoPrimo(actual_primo):
-    def primo(nro):
-        es_primo = True
-        for i in range(2,nro):
-            if nro % i == 0:
-                es_primo = False
-                break
-        return es_primo
-    if primo(actual_primo) == True:
-        return min([a for a in range(actual_primo +1,actual_primo*2)if primo(a)])
-    else:
-        return None   
+import math
 
+def ProximoPrimo(actual_primo):
+    def es_primo(nro):
+        if nro < 2:
+            return False
+        for i in range(2, int(math.sqrt(nro)) + 1):
+            if nro % i == 0:
+                return False
+        return True
+    
+    if not es_primo(actual_primo):
+        return None
+    
+    siguiente_primo = actual_primo + 1
+    while not es_primo(siguiente_primo):
+        siguiente_primo += 1
+    
+    return siguiente_primo
 def factorizar_numero(numero):
-    if (type(numero)!=int):
+    if not isinstance(numero, int) or numero < 1:
         return None
-    if (numero < 1):
-        return None
-    lista_primos = []
-    i = 2 
-    while (i < (int(numero/2) + 1)):
-        primo = True 
-        j=2
-        while (j < i):
-            if(i % j == 0):
-               primo = False
-               break
-            j+=1
-        if(primo):
-           lista_primos.append(i)
-        i+=1
+
+    def es_primo(n):
+        if n < 2:
+            return False
+        for i in range(2, int(n**0.5) + 1):
+            if n % i == 0:
+                return False
+        return True
+
+    lista_primos = [i for i in range(2, int(numero**0.5) + 1) if es_primo(i)]
     lista_factores = []
     lista_exponentes = []
-    numero_original = numero 
-    for i in lista_primos:
-        j=0
-        while (numero % i == 0):
-            numero=numero/i
-            if (j==0):
-                lista_factores.append(i)
-            j+=1
-        if (j>0):
-            lista_exponentes.apped(j)
-    if(len(lista_factores)==0):
-        return[[numero_original],[1]] 
-    else:
-        return[lista_factores,lista_exponentes]    
+    numero_original = numero
 
-def ClaseAnimal(especie, color):
-    class Animal:
-        def __init__(self, especie, color):
-            self.Especie = especie
-            self.Color= color
-            self.Edad = 0
+    for primo in lista_primos:
+        if numero % primo == 0:
+            exponente = 0
+            while numero % primo == 0:
+                numero //= primo
+                exponente += 1
+            lista_factores.append(primo)
+            lista_exponentes.append(exponente)
+    
+    if numero > 1:  # Si el número restante es mayor que 1, es un factor primo mayor que sqrt(numero_original)
+        lista_factores.append(numero)
+        lista_exponentes.append(1)
 
-        def CumplirAnios(self):
-            self.Edad += 1
-            return self.Edad
+    return [lista_factores, lista_exponentes]
 
-    a= Animal(especie,color)
-    return a     
+class Animal:
+    def __init__(self, especie, color):
+        self.especie = especie
+        self.color = color
+        self.edad = 0
+
+    def cumplir_anios(self):
+        self.edad += 1
+        return self.edad
+
+def crear_animal(especie, color):
+    return Animal(especie, color)
+
 
 def NumeroBinario(numero):
-    if type(numero) == int and numero > 0:
-        return int(format(numero,"b"))
+    if isinstance(numero, int) and numero > 0:
+        return int(format(numero, "b"))
     else:
-            return None
+        return None
